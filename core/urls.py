@@ -11,5 +11,6 @@ urlpatterns = [
 	path('upload', views.upload, name='upload'),
 	path('like-post',views.like_post, name='like-post'),
 	path('profile/<str:pk>', views.profile, name='profile'),
-	path('follow', views.follow, name='follow')
+	path('follow', views.follow, name='follow'),
+	path('delete-post/<uuid:post_id>/', views.delete_post, name='delete_post'),
 ]

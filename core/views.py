@@ -265,3 +265,27 @@ def search(request):
         
         username_profile_list = list(chain(*username_profile_list))
     return render(request, 'search.html', {'user_profile': user_profile, 'username_profile_list': username_profile_list})
+
+
+@login_required(login_url='signin')
+def delete_post(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+        
+        # Check if current user owns the post
+        if post.user == request.user.username:
+            # Delete the image file from server (optional)
+            if post.image:
+                post.image.delete()  # Deletes the actual file
+            
+            # Delete the post from database
+            post.delete()
+            messages.success(request, 'Post deleted successfully!')
+        else:
+            messages.error(request, 'You cannot delete this post!')
+            
+    except Post.DoesNotExist:
+        messages.error(request, 'Post not found!')
+    
+    # Redirect back to the previous page
+    return redirect(request.META.get('HTTP_REFERER', 'index'))
